@@ -38,7 +38,8 @@ class ViewController: UIViewController {
             .withAutoReconnect()
             .withHubConnectionDelegate(delegate: self.chatHubConnectionDelegate!)
             .withHttpConnectionOptions(configureHttpOptions: { (options) in
-                options.accessTokenProvider = { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJGSUdPIiwiZXhwIjoyNTM0MDIzMDA4MDAsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3QifQ.SysvET6OPaYF12rTYp252r4C0E7ZYcCSsJ51auLEL80" }
+//                options.accessTokenProvider = { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJGSUdPIiwiZXhwIjoyNTM0MDIzMDA4MDAsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3QifQ.SysvET6OPaYF12rTYp252r4C0E7ZYcCSsJ51auLEL80" }
+                options.accessTokenProvider = { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSGFsZXkgSGFsYWsiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImQwMzIxYjYwLTgzMjItNGM0MC04NDNmLTYwMzI2NmQxMzU4YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImhhbGV5LmhhbGFrQGdtYWlsLmNvbS54eCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJQZXRPd25lciIsIkZJR09fUEVUX09XTkVSIl0sImV4cCI6MTYxNzkxNTIyNCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3QiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdCJ9.GwiPj7fls_0rAUcEdNAvj0s7aOVJUax491y1jmS1-5s" }
                 options.skipNegotiation = true
             })
             .build()
@@ -74,7 +75,7 @@ class ViewController: UIViewController {
     
     // MARK: - IBAction
     @IBAction func btnSend(_ sender: UIButton) {
-        let intakeObject = AskVetIntakeObject(figoPetId: "some string", question: "another string", neutered: false)
+        let intakeObject = AskVetIntakeObject(figoPetId: "19490370", question: "another string", neutered: false)
         
         chatHubConnection!.invoke(method: "JoinSession", intakeObject, invocationDidComplete: { (response) in
             print("\n### Invoke Session Call:\n \(String(describing: response))")
