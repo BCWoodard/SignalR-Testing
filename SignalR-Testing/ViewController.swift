@@ -63,7 +63,15 @@ class ViewController: UIViewController {
 
     // MARK: - ChatHubConnectionDelegate Functions
     fileprivate func connectionDidOpen() {
-        print("### SUCCESS: Connection Did Open")
+        let intakeObject = AskVetIntakeObject(figoPetId: "132013", question: "another string", neutered: false)
+        
+        chatHubConnection!.invoke(method: "JoinSession", intakeObject) { (err) in
+            guard err == nil else {
+                print("### JoinSession Error")
+                return
+            }
+            print("### JoinSession SUCCESS")
+        }
     }
 
     fileprivate func connectionDidFailToOpen(error: Error) {
