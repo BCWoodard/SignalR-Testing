@@ -72,6 +72,9 @@ class ViewController: UIViewController {
             }
             print("### JoinSession SUCCESS")
         }
+        
+        // Need to invoke using this function. It takes one argument and returns one result
+        // self.chatHubConnection?.invoke(method: "JoinSession", intakeObject, resultType: <#T##Decodable.Protocol#>, invocationDidComplete: <#T##(Decodable?, Error?) -> Void#>)
     }
 
     fileprivate func connectionDidFailToOpen(error: Error) {
