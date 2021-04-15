@@ -12,18 +12,19 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var msgTextField: UITextField!
     @IBOutlet weak var sendButton: UIButton!
-    
-    private let serverUrl = URL(string: "https://figo-api.ask.vet/FigoPetOwnerHub")
+    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSGFsZXkgSGFsYWsiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImQwMzIxYjYwLTgzMjItNGM0MC04NDNmLTYwMzI2NmQxMzU4YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImhhbGV5LmhhbGFrQGdtYWlsLmNvbS54eCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJQZXRPd25lciIsIkZJR09fUEVUX09XTkVSIl0sImV4cCI6MTYxODUyNjYxMSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3QiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdCJ9.7jSi1TKQn4xsHAdxWit30tB4QiX51ZlTxrpOOFhleIg"
+    private let serverUrl = URL(string: "https://api-figo.ask.vet/FigoPetOwnerHub")
     private var chatHubConnection: HubConnection?
     private var chatHubConnectionDelegate: HubConnectionDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setupChatHub()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.setupChatHub()
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -37,28 +38,25 @@ class ViewController: UIViewController {
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: self.chatHubConnectionDelegate!)
             .withHttpConnectionOptions(configureHttpOptions: { (options) in
-//
-//          ### Partner Token
-//                options.accessTokenProvider = { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJGSUdPIiwiZXhwIjoyNTM0MDIzMDA4MDAsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3QifQ.SysvET6OPaYF12rTYp252r4C0E7ZYcCSsJ51auLEL80" }
-//
-//          ### User token from getLiveVetConfiguration
-                options.accessTokenProvider = { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSGFsZXkgSGFsYWsiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImQwMzIxYjYwLTgzMjItNGM0MC04NDNmLTYwMzI2NmQxMzU4YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImhhbGV5LmhhbGFrQGdtYWlsLmNvbS54eCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJQZXRPd25lciIsIkZJR09fUEVUX09XTkVSIl0sImV4cCI6MTYxNzkxNTIyNCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3QiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdCJ9.GwiPj7fls_0rAUcEdNAvj0s7aOVJUax491y1jmS1-5s" }
+                options.accessTokenProvider = { self.token }
                 options.skipNegotiation = true
             })
             .build()
         
         
-        let intakeObject = AskVetIntakeObject(figoPetId: "19490370", question: "another string", neutered: false)
         self.chatHubConnection!.on(method: "OnSessionChange") { (response) in
-            print("### JoinSession: \(response)")
+            print("### OnSessionChange: \(response)")
+        }
+        self.chatHubConnection!.on(method: "OnPostAdded") { (response) in
+            // Do something with the response object
+            print("### OnPostAdded: \(response)")
+        }
+        self.chatHubConnection!.on(method: "OnTyping") { (response) in
+            // Do something with the response object
+            print("### OnTyping: \(response)")
         }
         
-        self.chatHubConnection!
-            .start()
-//        self.chatHubConnection!.invoke(method: "JoinSession", intakeObject) { (err) in
-//            print("### Err: \(err?.localizedDescription)")
-//        }
-        
+        self.chatHubConnection!.start()
 
     }
 
@@ -87,11 +85,17 @@ class ViewController: UIViewController {
     
     // MARK: - IBAction
     @IBAction func btnSend(_ sender: UIButton) {
-        let intakeObject = AskVetIntakeObject(figoPetId: "19490370", question: "another string", neutered: false)
+//        let FigoPetId = "132013"
+//        let Question = "question"
+//        let Neutered = false
+        let intakeObject = AskVetIntakeObject(figoPetId: "132013", question: "another string", neutered: false)
         
-        chatHubConnection!.invoke(method: "Post", intakeObject, invocationDidComplete: { (response) in
-            print("\n### Invoke Session Call:\n \(String(describing: response))")
-        })
+        chatHubConnection!.invoke(method: "JoinSession", intakeObject) { (err) in
+            print("### JoinSession: \(err?.localizedDescription ?? "Nil error description")")
+        }
+//        chatHubConnection!.invoke(method: "JoinSession", intakeObject, invocationDidComplete: { (response) in
+//            print("\n### Invoke Session Call:\n \(String(describing: response))")
+//        })
     }
 }
 
@@ -137,7 +141,7 @@ struct AskVetIntakeObject: Encodable {
     var neutered: Bool? = false
 }
 
-struct ChatSessionWithPosts: Encodable {
+struct AskVetChatSessionWithPosts: Encodable {
     enum CodingKey: String {
         case posts = "Posts"
         case session = "Session"
